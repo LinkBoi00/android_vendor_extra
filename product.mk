@@ -26,4 +26,5 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
 
 # Overlays
 PRODUCT_PACKAGES += \
+    BromiteWebViewOverlay \
     LineageUpdaterOverlay
