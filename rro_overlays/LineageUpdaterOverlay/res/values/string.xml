@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022 The LineageOS Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- URL to be checked for OTA updates -->
+    <string name="updater_server_url" translatable="false">https://raw.githubusercontent.com/xiaomi-mt6853-devs/releases/lineage-19.1/updater.json</string> 
+
+    <!-- URL to changelog -->
+    <string name="menu_changelog_url" translatable="false">https://github.com/xiaomi-mt6853-devs/releases/releases</string>
+</resources>

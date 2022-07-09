@@ -24,3 +24,6 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
     system/etc/ih8sn.conf \
     system/etc/init/ih8sn.rc
 
+# Overlays
+PRODUCT_PACKAGES += \
+    LineageUpdaterOverlay
