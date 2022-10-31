@@ -25,6 +25,9 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
     system/etc/init/ih8sn.rc
 
 # Overlays
+DEVICE_PACKAGE_OVERLAYS += \
+    $(LOCAL_PATH)/overlay
+
 PRODUCT_PACKAGES += \
     BromiteWebViewOverlay \
     LineageUpdaterOverlay
