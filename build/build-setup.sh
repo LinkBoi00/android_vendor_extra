@@ -28,3 +28,8 @@ VENDOR_PREBUILTS_GRAPHENE_PATH="$VENDOR_PREBUILTS_PATH/apps/GrapheneCamera"
 if ! [ -f $VENDOR_PREBUILTS_GRAPHENE_PATH/GrapheneCamera.apk ]; then
     echo "Warning: GrapheneCamera is not present."
 fi
+
+# Execute ih8sn fetch script
+echo -e "extra: Fetching ih8sn (SebaUbuntu)"
+VENDOR_EXTERNAL_IH8SN_PATH="$VENDOR_EXTERNAL_PATH/ih8sn"
+. $VENDOR_EXTERNAL_IH8SN_PATH/fetch-ih8sn.sh
