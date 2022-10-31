@@ -1,0 +1,29 @@
+From f84e654e98e38315233b80a7c65b7fabf2026062 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 17 May 2022 20:29:50 +0430
+Subject: [PATCH] stagefright: remove HW_TEXTRUE usage from SurfaceMediaSource
+
+* Fixes WFD on mediatek devices
+
+Change-Id: I14c6390a6af12e0bb099f24fe2c8b369fa579810
+---
+ media/libstagefright/SurfaceMediaSource.cpp | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/media/libstagefright/SurfaceMediaSource.cpp b/media/libstagefright/SurfaceMediaSource.cpp
+index d7370551e0..a299d04880 100644
+--- a/media/libstagefright/SurfaceMediaSource.cpp
++++ b/media/libstagefright/SurfaceMediaSource.cpp
+@@ -59,8 +59,7 @@ SurfaceMediaSource::SurfaceMediaSource(uint32_t bufferWidth, uint32_t bufferHeig
+ 
+     BufferQueue::createBufferQueue(&mProducer, &mConsumer);
+     mConsumer->setDefaultBufferSize(bufferWidth, bufferHeight);
+-    mConsumer->setConsumerUsageBits(GRALLOC_USAGE_HW_VIDEO_ENCODER |
+-            GRALLOC_USAGE_HW_TEXTURE);
++    mConsumer->setConsumerUsageBits(GRALLOC_USAGE_HW_VIDEO_ENCODER);
+ 
+     sp<ISurfaceComposer> composer(ComposerService::getComposerService());
+ 
+-- 
+2.37.1
+
