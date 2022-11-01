@@ -8,6 +8,9 @@
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)
 
+# AudioFX
+TARGET_EXCLUDES_AUDIOFX := true
+
 # Apps
 PRODUCT_PACKAGES += \
     GrapheneCamera
