@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 #
 # Copyright (C) 2022 Giovanni Ricca
+# Copyright (C) 2022 LinkBoi00
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -17,10 +18,9 @@ def getprop(prop):
     ).group(0)
 
 
-version, datetime, incremental = (
+version, datetime = (
     getprop("ro.lineage.build.version"),  # version
     getprop("ro.build.date.utc"),  # datetime
-    getprop("ro.build.version.incremental"),  # incremental
 )
 filename = max(
     glob("".join(["lineage-", version, "*", ".zip"])),
@@ -44,7 +44,6 @@ print(
     }
   ]
 }
-Place a dummy json file named "%s.json"
 """
-    % (datetime, filename, id, size, version, incremental)
+    % (datetime, filename, id, size, version)
 )
