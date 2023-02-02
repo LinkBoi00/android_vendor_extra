@@ -1,0 +1,31 @@
+From b70681460e41e6023f712b1ae2846f00f1baf4b4 Mon Sep 17 00:00:00 2001
+From: LibXZR <i@xzr.moe>
+Date: Fri, 8 Apr 2022 17:41:11 +0800
+Subject: [PATCH 10/10] SystemUI: Dismiss screenshot window on touch outside
+
+This window can be annoying because it blocks content and we
+have to swipe to dismiss it, which is unintuitive.
+
+Change-Id: I72e28b8c6c071b14d5dde419660aeff4c58069fa
+Signed-off-by: LibXZR <i@xzr.moe>
+---
+ .../com/android/systemui/screenshot/ScreenshotController.java  | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.java b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.java
+index 3367adfd..7f3310aa 100644
+--- a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.java
++++ b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.java
+@@ -542,8 +542,7 @@ public class ScreenshotController {
+ 
+             @Override
+             public void onTouchOutside() {
+-                // TODO(159460485): Remove this when focus is handled properly in the system
+-                setWindowFocusable(false);
++                dismissScreenshot(false);
+             }
+         });
+         mScreenshotView.setDefaultTimeoutMillis(mScreenshotHandler.getDefaultTimeoutMillis());
+-- 
+2.34.1
+

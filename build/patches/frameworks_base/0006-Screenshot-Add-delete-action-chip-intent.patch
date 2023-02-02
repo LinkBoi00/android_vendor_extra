@@ -1,0 +1,168 @@
+From a3093a5dba5956cba30595339fbf5baf9e181877 Mon Sep 17 00:00:00 2001
+From: ganeshi4u <ganeshvarmai4u@gmail.com>
+Date: Mon, 19 Oct 2020 17:23:14 +0000
+Subject: [PATCH 06/10] Screenshot: Add delete action chip intent
+
+[ghostrider-reborn] updated to android 12, 13
+
+Co-authored-by: Adithya R <gh0strider.2k18.reborn@gmail.com>
+Change-Id: Ia55ac91c2db2f44062674a699f8df63c96e1de5c
+---
+ .../SystemUI/res/layout/screenshot_static.xml |  2 ++
+ packages/SystemUI/res/values/strings.xml      |  4 +++
+ .../systemui/screenshot/ScreenshotEvent.java  |  2 ++
+ .../systemui/screenshot/ScreenshotView.java   | 29 +++++++++++++++++++
+ 4 files changed, 37 insertions(+)
+
+diff --git a/packages/SystemUI/res/layout/screenshot_static.xml b/packages/SystemUI/res/layout/screenshot_static.xml
+index 9c027495..8f1a35a3 100644
+--- a/packages/SystemUI/res/layout/screenshot_static.xml
++++ b/packages/SystemUI/res/layout/screenshot_static.xml
+@@ -55,6 +55,8 @@
+                      android:id="@+id/screenshot_share_chip"/>
+             <include layout="@layout/overlay_action_chip"
+                      android:id="@+id/screenshot_edit_chip"/>
++            <include layout="@layout/overlay_action_chip"
++                     android:id="@+id/screenshot_delete_chip"/>
+             <include layout="@layout/overlay_action_chip"
+                      android:id="@+id/screenshot_scroll_chip"
+                      android:visibility="gone" />
+diff --git a/packages/SystemUI/res/values/strings.xml b/packages/SystemUI/res/values/strings.xml
+index 53f12273..2fed2194 100644
+--- a/packages/SystemUI/res/values/strings.xml
++++ b/packages/SystemUI/res/values/strings.xml
+@@ -221,6 +221,10 @@
+     <string name="screenshot_edit_description">Edit screenshot</string>
+     <!-- Content description indicating that tapping the element will allow sharing the screenshot [CHAR LIMIT=NONE] -->
+     <string name="screenshot_share_description">Share screenshot</string>
++    <!-- Label for UI element which allows deleting the screenshot [CHAR LIMIT=30] -->
++    <string name="screenshot_delete_label">Delete</string>
++    <!-- Content description indicating that tapping the element will allow deleting the screenshot [CHAR LIMIT=NONE] -->
++    <string name="screenshot_delete_description">Delete screenshot</string>
+     <!-- Label for UI element which allows the user to capture additional off-screen content in a screenshot. [CHAR LIMIT=30] -->
+     <string name="screenshot_scroll_label">Capture more</string>
+     <!-- Content description indicating that tapping a button will dismiss the screenshots UI [CHAR LIMIT=NONE] -->
+diff --git a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java
+index 8b5a24c0..218428bb 100644
+--- a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java
++++ b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java
+@@ -52,6 +52,8 @@ public enum ScreenshotEvent implements UiEventLogger.UiEventEnum {
+     SCREENSHOT_EDIT_TAPPED(308),
+     @UiEvent(doc = "screenshot share button tapped")
+     SCREENSHOT_SHARE_TAPPED(309),
++    @UiEvent(doc = "screenshot delete button tapped")
++    SCREENSHOT_DELETE_TAPPED(369),
+     @UiEvent(doc = "screenshot smart action chip tapped")
+     SCREENSHOT_SMART_ACTION_TAPPED(374),
+     @UiEvent(doc = "screenshot scroll tapped")
+diff --git a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java
+index 84a26a05..a0e76109 100644
+--- a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java
++++ b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java
+@@ -156,6 +156,7 @@ public class ScreenshotView extends FrameLayout implements
+     private OverlayActionChip mEditChip;
+     private OverlayActionChip mScrollChip;
+     private OverlayActionChip mQuickShareChip;
++    private OverlayActionChip mDeleteChip;
+ 
+     private UiEventLogger mUiEventLogger;
+     private ScreenshotViewCallback mCallbacks;
+@@ -174,6 +175,7 @@ public class ScreenshotView extends FrameLayout implements
+     private enum PendingInteraction {
+         PREVIEW,
+         EDIT,
++        DELETE,
+         SHARE,
+         QUICK_SHARE
+     }
+@@ -365,6 +367,7 @@ public class ScreenshotView extends FrameLayout implements
+         mShareChip = requireNonNull(mActionsContainer.findViewById(R.id.screenshot_share_chip));
+         mEditChip = requireNonNull(mActionsContainer.findViewById(R.id.screenshot_edit_chip));
+         mScrollChip = requireNonNull(mActionsContainer.findViewById(R.id.screenshot_scroll_chip));
++        mDeleteChip = requireNonNull(mActionsContainer.findViewById(R.id.screenshot_delete_chip));
+ 
+         int swipePaddingPx = (int) FloatingWindowUtil.dpToPx(mDisplayMetrics, SWIPE_PADDING_DP);
+         TouchDelegate previewDelegate = new TouchDelegate(
+@@ -677,6 +680,7 @@ public class ScreenshotView extends FrameLayout implements
+             if (mQuickShareChip != null) {
+                 mQuickShareChip.setIsPending(false);
+             }
++            mDeleteChip.setIsPending(false);
+             mPendingInteraction = PendingInteraction.SHARE;
+         });
+         chips.add(mShareChip);
+@@ -691,16 +695,31 @@ public class ScreenshotView extends FrameLayout implements
+             if (mQuickShareChip != null) {
+                 mQuickShareChip.setIsPending(false);
+             }
++            mDeleteChip.setIsPending(false);
+             mPendingInteraction = PendingInteraction.EDIT;
+         });
+         chips.add(mEditChip);
+ 
++        mDeleteChip.setContentDescription(mContext.getString(R.string.screenshot_delete_label));
++        mDeleteChip.setIcon(Icon.createWithResource(mContext, R.drawable.ic_screenshot_delete), true);
++        mDeleteChip.setOnClickListener(v -> {
++            mDeleteChip.setIsPending(true);
++            mEditChip.setIsPending(false);
++            mShareChip.setIsPending(false);
++            if (mQuickShareChip != null) {
++                mQuickShareChip.setIsPending(false);
++            }
++            mPendingInteraction = PendingInteraction.DELETE;
++        });
++        chips.add(mDeleteChip);
++
+         mScreenshotPreview.setOnClickListener(v -> {
+             mShareChip.setIsPending(false);
+             mEditChip.setIsPending(false);
+             if (mQuickShareChip != null) {
+                 mQuickShareChip.setIsPending(false);
+             }
++            mDeleteChip.setIsPending(false);
+             mPendingInteraction = PendingInteraction.PREVIEW;
+         });
+ 
+@@ -778,6 +797,10 @@ public class ScreenshotView extends FrameLayout implements
+             startSharedTransition(
+                     imageData.editTransition.get());
+         });
++        mDeleteChip.setPendingIntent(imageData.deleteAction.actionIntent, () -> {
++            mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_DELETE_TAPPED);
++            animateDismissal();
++        });
+         mScreenshotPreview.setOnClickListener(v -> {
+             mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_PREVIEW_TAPPED, 0, mPackageName);
+             startSharedTransition(
+@@ -803,6 +826,9 @@ public class ScreenshotView extends FrameLayout implements
+                 case EDIT:
+                     mEditChip.callOnClick();
+                     break;
++                case DELETE:
++                    mDeleteChip.callOnClick();
++                    break;
+                 case QUICK_SHARE:
+                     mQuickShareChip.callOnClick();
+                     break;
+@@ -838,6 +864,7 @@ public class ScreenshotView extends FrameLayout implements
+             mQuickShareChip.setOnClickListener(v -> {
+                 mShareChip.setIsPending(false);
+                 mEditChip.setIsPending(false);
++                mDeleteChip.setIsPending(false);
+                 mQuickShareChip.setIsPending(true);
+                 mPendingInteraction = PendingInteraction.QUICK_SHARE;
+             });
+@@ -1021,8 +1048,10 @@ public class ScreenshotView extends FrameLayout implements
+         mShareChip.setOnClickListener(null);
+         mScrollingScrim.setVisibility(View.GONE);
+         mEditChip.setOnClickListener(null);
++        mDeleteChip.setOnClickListener(null);
+         mShareChip.setIsPending(false);
+         mEditChip.setIsPending(false);
++        mDeleteChip.setIsPending(false);
+         mPendingInteraction = null;
+         for (OverlayActionChip chip : mSmartChips) {
+             mActionsView.removeView(chip);
+-- 
+2.34.1
+

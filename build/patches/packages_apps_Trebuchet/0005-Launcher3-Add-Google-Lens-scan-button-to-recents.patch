@@ -1,0 +1,261 @@
+From 008504a06d7dbe24c62c6fb6e16e200e3a70015c Mon Sep 17 00:00:00 2001
+From: Suphon Thanakornpakapong <paphonb@gmail.com>
+Date: Mon, 18 Oct 2021 12:06:07 +0700
+Subject: [PATCH 5/6] Launcher3: Add Google Lens scan button to recents
+
+And a squash of:
+
+Launcher3: Restart launcher on changing google search/lens app
+
+idoybh (YAAP): Keep clear all rightmost
+
+Co-authored-by: Pranav Vashi <neobuddy89@gmail.com>
+Co-authored-by: hundeva <hundeva@gmail.com>
+Change-Id: If00a4542ff7134ce4b84de3894f800d2b9a4f797
+Signed-off-by: Adithya R <gh0strider.2k18.reborn@gmail.com>
+---
+ .gitignore                                    |  1 +
+ quickstep/res/drawable/ic_lens.xml            |  5 +++
+ .../res/layout/overview_actions_container.xml | 17 ++++++++++
+ .../android/quickstep/ImageActionsApi.java    |  6 ++++
+ .../android/quickstep/TaskOverlayFactory.java | 10 ++++++
+ .../quickstep/util/ImageActionUtils.java      | 31 +++++++++++++++++++
+ .../quickstep/views/OverviewActionsView.java  | 10 ++++++
+ res/values/lineage_strings.xml                |  3 ++
+ src/com/android/launcher3/Utilities.java      | 11 +++++++
+ 9 files changed, 94 insertions(+)
+ create mode 100644 quickstep/res/drawable/ic_lens.xml
+
+diff --git a/.gitignore b/.gitignore
+index 694b40c7ef..85bd93af17 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -15,3 +15,4 @@ gradle/
+ build/
+ gradlew*
+ .DS_Store
++.settings
+diff --git a/quickstep/res/drawable/ic_lens.xml b/quickstep/res/drawable/ic_lens.xml
+new file mode 100644
+index 0000000000..e372e83526
+--- /dev/null
++++ b/quickstep/res/drawable/ic_lens.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<vector android:height="24.0dip" android:width="24.0dip" android:viewportWidth="24.0" android:viewportHeight="24.0"
++  xmlns:android="http://schemas.android.com/apk/res/android">
++    <path android:fillColor="#ff000000" android:pathData="M8.4445,5.7778C6.9689,5.7778 5.7778,6.9689 5.7778,8.4445L5.7778,10.2222L4,10.2222L4,8.4445C4,5.9911 5.9911,4 8.4445,4L10.2222,4v1.7778zM17.3333,17.3333m-1.7778,0a1.7778,1.7778 0,1 1,3.5555 0,1.7778 1.7778,0 1,1 -3.5555,0M12,12m-3.1111,0a3.1111,3.1111 0,1 1,6.2222 0,3.1111 3.1111,0 1,1 -6.2222,0M8.4444,18.2222c-1.4755,0 -2.6667,-1.1911 -2.6667,-2.6667L5.7777,13.7778L4,13.7778v1.7778C4,18.0089 5.9911,20 8.4445,20L10.2222,20L10.2222,18.2222ZM15.5555,5.7778c1.4755,0 2.6667,1.1911 2.6667,2.6667L18.2222,10.2222L20,10.2222L20,8.4445C20,5.9911 18.0089,4 15.5555,4h-1.7778v1.7778z" />
++</vector>
+\ No newline at end of file
+diff --git a/quickstep/res/layout/overview_actions_container.xml b/quickstep/res/layout/overview_actions_container.xml
+index 319eb2349b..3cc1a155c7 100644
+--- a/quickstep/res/layout/overview_actions_container.xml
++++ b/quickstep/res/layout/overview_actions_container.xml
+@@ -60,6 +60,23 @@
+             android:layout_height="1dp"
+             android:layout_weight="1" />
+ 
++        <Button
++            android:drawableStart="@drawable/ic_lens"
++            style="@style/OverviewActionButton"
++            android:id="@+id/action_lens"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="@string/action_lens"
++            android:theme="@style/ThemeControlHighlightWorkspaceColor"
++            android:visibility="gone" />
++
++        <Space
++            android:id="@+id/lens_space"
++            android:layout_width="0dp"
++            android:layout_height="1dp"
++            android:layout_weight="1"
++            android:visibility="gone" />
++
+         <Button
+             android:id="@+id/action_clear_all"
+             style="@style/OverviewActionButton"
+diff --git a/quickstep/src/com/android/quickstep/ImageActionsApi.java b/quickstep/src/com/android/quickstep/ImageActionsApi.java
+index 227380664c..b7acd29795 100644
+--- a/quickstep/src/com/android/quickstep/ImageActionsApi.java
++++ b/quickstep/src/com/android/quickstep/ImageActionsApi.java
+@@ -31,6 +31,7 @@ import android.graphics.Insets;
+ import android.graphics.Rect;
+ import android.graphics.RectF;
+ import android.util.Log;
++import android.view.View;
+ 
+ import androidx.annotation.Nullable;
+ import androidx.annotation.UiThread;
+@@ -108,6 +109,11 @@ public class ImageActionsApi {
+         ImageActionUtils.startShareActivity(mContext, mBitmapSupplier, crop, null, TAG);
+     }
+ 
++    @UiThread
++    public void startLensActivity() {
++        ImageActionUtils.startLensActivity(mContext, mBitmapSupplier, null, null, TAG);
++    }
++
+     /**
+      * @param screenshot       to be saved to the media store.
+      * @param screenshotBounds the location of where the bitmap was laid out on the screen in
+diff --git a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
+index 75f22741ac..fa248070b1 100644
+--- a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
++++ b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
+@@ -328,6 +328,14 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+             public void onClearAllTasksRequested() {
+                 endLiveTileMode(TaskOverlay.this::clearAllTasks);
+             }
++
++            public void onLens() {
++                if (mIsAllowedByPolicy) {
++                    endLiveTileMode(() -> mImageApi.startLensActivity());
++                } else {
++                    showBlockedByPolicyMessage();
++                }
++            }
+         }
+     }
+ 
+@@ -343,5 +351,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+         void onSplit();
+ 
+         void onClearAllTasksRequested();
++
++        void onLens();
+     }
+ }
+diff --git a/quickstep/src/com/android/quickstep/util/ImageActionUtils.java b/quickstep/src/com/android/quickstep/util/ImageActionUtils.java
+index 9fe24dec66..37491dbd8b 100644
+--- a/quickstep/src/com/android/quickstep/util/ImageActionUtils.java
++++ b/quickstep/src/com/android/quickstep/util/ImageActionUtils.java
+@@ -49,6 +49,7 @@ import androidx.core.content.FileProvider;
+ import com.android.internal.app.ChooserActivity;
+ import com.android.internal.util.ScreenshotHelper;
+ import com.android.launcher3.BuildConfig;
++import com.android.launcher3.Utilities;
+ import com.android.quickstep.SystemUiProxy;
+ import com.android.systemui.shared.recents.model.Task;
+ 
+@@ -151,6 +152,18 @@ public class ImageActionUtils {
+         });
+     }
+ 
++    public static void startLensActivity(Context context, Supplier<Bitmap> bitmapSupplier,
++            Rect crop, Intent intent, String tag) {
++        if (bitmapSupplier.get() == null) {
++            Log.e(tag, "No snapshot available, not starting share.");
++            return;
++        }
++
++        UI_HELPER_EXECUTOR.execute(() -> persistBitmapAndStartActivity(context,
++                bitmapSupplier.get(), crop, intent, ImageActionUtils::getLensIntentForImageUri,
++                tag));
++    }
++
+     /**
+      * Starts activity based on given intent created from image uri.
+      */
+@@ -291,6 +304,24 @@ public class ImageActionUtils {
+         return new Intent[]{Intent.createChooser(intent, null).addFlags(FLAG_ACTIVITY_NEW_TASK)};
+     }
+ 
++    @WorkerThread
++    private static Intent[] getLensIntentForImageUri(Uri uri, Intent intent) {
++        if (intent == null) {
++            intent = new Intent();
++        }
++        ClipData clipdata = new ClipData(new ClipDescription("content",
++                new String[]{"image/png"}),
++                new ClipData.Item(uri));
++        intent.setAction(Intent.ACTION_SEND)
++                .setComponent(new ComponentName(Utilities.GSA_PACKAGE, Utilities.LENS_SHARE_ACTIVITY))
++                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++                .addFlags(FLAG_GRANT_READ_URI_PERMISSION)
++                .setType("image/png")
++                .putExtra(Intent.EXTRA_STREAM, uri)
++                .setClipData(clipdata);
++        return new Intent[]{Intent.createChooser(intent, null).addFlags(FLAG_ACTIVITY_NEW_TASK)};
++    }
++
+     private static void clearOldCacheFiles(Context context) {
+         THREAD_POOL_EXECUTOR.execute(() -> {
+             File parent = new File(context.getCacheDir(), SUB_FOLDER);
+diff --git a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
+index 1c2e464644..76b27544a9 100644
+--- a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
++++ b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
+@@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
+ 
+ import com.android.launcher3.DeviceProfile;
+ import com.android.launcher3.Insettable;
++import com.android.launcher3.Utilities;
+ import com.android.launcher3.R;
+ import com.android.launcher3.util.DisplayController;
+ import com.android.launcher3.util.MultiValueAlpha;
+@@ -129,6 +130,13 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+ 
+         mSplitButton = findViewById(R.id.action_split);
+         mSplitButton.setOnClickListener(this);
++
++        if (Utilities.isGSAEnabled(getContext())) {
++            View lens = findViewById(R.id.action_lens);
++            lens.setOnClickListener(this);
++            lens.setVisibility(VISIBLE);
++            findViewById(R.id.lens_space).setVisibility(VISIBLE);
++        }
+     }
+ 
+     /**
+@@ -152,6 +160,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+             mCallbacks.onSplit();
+         } else if (id == R.id.action_clear_all) {
+             mCallbacks.onClearAllTasksRequested();
++        } else if (id == R.id.action_lens) {
++            mCallbacks.onLens();
+         }
+     }
+ 
+diff --git a/res/values/lineage_strings.xml b/res/values/lineage_strings.xml
+index be966955af..51cf2ecca1 100644
+--- a/res/values/lineage_strings.xml
++++ b/res/values/lineage_strings.xml
+@@ -56,4 +56,7 @@
+     <!-- Gestures -->
+     <string name="pref_dt_gesture_title">Double tap gesture</string>
+     <string name="pref_dt_gesture_summary">Double tap on empty space for screen-off</string>
++
++    <!-- Recents -->
++    <string name="action_lens">Lens</string>
+ </resources>
+diff --git a/src/com/android/launcher3/Utilities.java b/src/com/android/launcher3/Utilities.java
+index adb73577eb..863d123cb5 100644
+--- a/src/com/android/launcher3/Utilities.java
++++ b/src/com/android/launcher3/Utilities.java
+@@ -154,6 +154,9 @@ public final class Utilities {
+     public static final boolean IS_DEBUG_DEVICE =
+             Build.TYPE.toLowerCase(Locale.ROOT).equals("eng");
+ 
++    public static final String GSA_PACKAGE = "com.google.android.googlequicksearchbox";
++    public static final String LENS_SHARE_ACTIVITY = "com.google.android.apps.search.lens.LensShareEntryPointActivity";
++
+     /**
+      * Returns true if theme is dark.
+      */
+@@ -945,4 +948,12 @@ public final class Utilities {
+         SharedPreferences prefs = getPrefs(context.getApplicationContext());
+         return prefs.getBoolean(KEY_DT_GESTURE, true);
+     }
++
++    public static boolean isGSAEnabled(Context context) {
++        try {
++            return context.getPackageManager().getApplicationInfo(GSA_PACKAGE, 0).enabled;
++        } catch (PackageManager.NameNotFoundException e) {
++            return false;
++        }
++    }
+ }
+-- 
+2.34.1
+

@@ -1,4 +1,4 @@
-From f84e654e98e38315233b80a7c65b7fabf2026062 Mon Sep 17 00:00:00 2001
+From d1bebf90484f952d3d19b70ab966065df1935a74 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 17 May 2022 20:29:50 +0430
 Subject: [PATCH] stagefright: remove HW_TEXTRUE usage from SurfaceMediaSource
@@ -25,5 +25,5 @@ index d7370551e0..a299d04880 100644
      sp<ISurfaceComposer> composer(ComposerService::getComposerService());
  
 -- 
-2.37.1
+2.34.1
 
