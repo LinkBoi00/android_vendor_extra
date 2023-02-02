@@ -8,9 +8,6 @@
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)
 
-# AudioFX
-TARGET_EXCLUDES_AUDIOFX := true
-
 # Apps
 PRODUCT_PACKAGES += \
     GrapheneCamera
@@ -38,10 +35,3 @@ PRODUCT_PACKAGES += \
 # Default ADB shell prompt
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.sys.adb.shell=/system_ext/bin/bash
-
-# IORapd
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.iorapd.enable=false \
-    iorapd.perfetto.enable=false \
-    iorapd.readahead.enable=false \
-    persist.device_config.runtime_native_boot.iorap_readahead_enable=false
