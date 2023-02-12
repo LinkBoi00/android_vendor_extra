@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-if [ -z ${VENDOR_PREBUILTS_PATH+x} ]; then
+if [ -z ${VENDOR_EXTERNAL_PATH+x} ]; then
     echo -e "Error: Script is not ran from build-setup.sh."
 else
     wget -q https://github.com/SebaUbuntu/ih8sn/archive/refs/heads/master.zip -O $VENDOR_EXTERNAL_PATH/ih8sn/latest-release.zip
