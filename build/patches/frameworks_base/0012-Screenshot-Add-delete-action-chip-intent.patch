@@ -1,7 +1,7 @@
-From a3093a5dba5956cba30595339fbf5baf9e181877 Mon Sep 17 00:00:00 2001
+From ab84865a4ad298b1682d17c37bf5db933975a9d6 Mon Sep 17 00:00:00 2001
 From: ganeshi4u <ganeshvarmai4u@gmail.com>
 Date: Mon, 19 Oct 2020 17:23:14 +0000
-Subject: [PATCH 06/10] Screenshot: Add delete action chip intent
+Subject: [PATCH 12/15] Screenshot: Add delete action chip intent
 
 [ghostrider-reborn] updated to android 12, 13
 
@@ -15,7 +15,7 @@ Change-Id: Ia55ac91c2db2f44062674a699f8df63c96e1de5c
  4 files changed, 37 insertions(+)
 
 diff --git a/packages/SystemUI/res/layout/screenshot_static.xml b/packages/SystemUI/res/layout/screenshot_static.xml
-index 9c027495..8f1a35a3 100644
+index 9c027495aa1e..8f1a35a30e4a 100644
 --- a/packages/SystemUI/res/layout/screenshot_static.xml
 +++ b/packages/SystemUI/res/layout/screenshot_static.xml
 @@ -55,6 +55,8 @@
@@ -28,7 +28,7 @@ index 9c027495..8f1a35a3 100644
                       android:id="@+id/screenshot_scroll_chip"
                       android:visibility="gone" />
 diff --git a/packages/SystemUI/res/values/strings.xml b/packages/SystemUI/res/values/strings.xml
-index 53f12273..2fed2194 100644
+index 53f1227383b7..2fed2194d373 100644
 --- a/packages/SystemUI/res/values/strings.xml
 +++ b/packages/SystemUI/res/values/strings.xml
 @@ -221,6 +221,10 @@
@@ -43,7 +43,7 @@ index 53f12273..2fed2194 100644
      <string name="screenshot_scroll_label">Capture more</string>
      <!-- Content description indicating that tapping a button will dismiss the screenshots UI [CHAR LIMIT=NONE] -->
 diff --git a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java
-index 8b5a24c0..218428bb 100644
+index 8b5a24c0e2ff..218428bb9183 100644
 --- a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java
 +++ b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotEvent.java
 @@ -52,6 +52,8 @@ public enum ScreenshotEvent implements UiEventLogger.UiEventEnum {
@@ -56,7 +56,7 @@ index 8b5a24c0..218428bb 100644
      SCREENSHOT_SMART_ACTION_TAPPED(374),
      @UiEvent(doc = "screenshot scroll tapped")
 diff --git a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java
-index 84a26a05..a0e76109 100644
+index 84a26a05355e..a0e761096e75 100644
 --- a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java
 +++ b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotView.java
 @@ -156,6 +156,7 @@ public class ScreenshotView extends FrameLayout implements

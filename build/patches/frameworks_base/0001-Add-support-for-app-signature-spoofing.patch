@@ -1,7 +1,7 @@
-From 875ad6d8f6578935d4a6b59f928dc306004b152f Mon Sep 17 00:00:00 2001
+From b14b9d3cd92a8f29bd695b465739d3c454fea641 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Sat, 16 Oct 2021 05:27:57 -0700
-Subject: [PATCH 01/10] Add support for app signature spoofing
+Subject: [PATCH 01/15] Add support for app signature spoofing
 
 This is needed by microG GmsCore to pretend to be the official Google
 Play Services package, because client apps check the package signature
@@ -38,7 +38,7 @@ Change-Id: Ied7d6ce0b83a2d2345c3abba0429998d86494a88
  4 files changed, 57 insertions(+), 3 deletions(-)
 
 diff --git a/core/api/current.txt b/core/api/current.txt
-index c8a43db2..27718303 100644
+index c8a43db2f9c2..277183036c60 100644
 --- a/core/api/current.txt
 +++ b/core/api/current.txt
 @@ -87,6 +87,7 @@ package android {
@@ -58,7 +58,7 @@ index c8a43db2..27718303 100644
      field public static final String MICROPHONE = "android.permission-group.MICROPHONE";
      field public static final String NEARBY_DEVICES = "android.permission-group.NEARBY_DEVICES";
 diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
-index 1b908034..c04ddb86 100644
+index 1b90803404f7..c04ddb86c60b 100644
 --- a/core/res/AndroidManifest.xml
 +++ b/core/res/AndroidManifest.xml
 @@ -3542,6 +3542,21 @@
@@ -84,7 +84,7 @@ index 1b908034..c04ddb86 100644
           {@link android.content.pm.PackageManager#addPackageToPreferred}
           for details. -->
 diff --git a/core/res/res/values/strings.xml b/core/res/res/values/strings.xml
-index 5763345a..8ffdbdd6 100644
+index 5763345aba4d..8ffdbdd6f15b 100644
 --- a/core/res/res/values/strings.xml
 +++ b/core/res/res/values/strings.xml
 @@ -974,6 +974,18 @@
@@ -107,7 +107,7 @@ index 5763345a..8ffdbdd6 100644
      <string name="permlab_statusBar">disable or modify status bar</string>
      <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 46b7460d..90f75ded 100644
+index 46b7460dff1b..90f75dedef59 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -1603,6 +1603,29 @@ public class ComputerEngine implements Computer {

@@ -1,7 +1,7 @@
-From b4cbf90219257779fa32a63bbc11b3049edfe7e2 Mon Sep 17 00:00:00 2001
+From d4b37ebc327eb88e4ce12d6c62c45a0bd2dc0401 Mon Sep 17 00:00:00 2001
 From: Sourajit Karmakar <sourajit.karmakar@gmail.com>
 Date: Tue, 29 Dec 2020 21:50:09 +0100
-Subject: [PATCH 08/10] SystemUI: Add delete action to screen recorder
+Subject: [PATCH 14/15] SystemUI: Add delete action to screen recorder
  notification
 
 This reverts commit 6fcdb6bf9e396f89cd497ee82811dbef6179caba.
@@ -18,7 +18,7 @@ Reviewed-on: https://review.statixos.com/c/android_frameworks_base/+/7199
  2 files changed, 39 insertions(+)
 
 diff --git a/packages/SystemUI/res/values/strings.xml b/packages/SystemUI/res/values/strings.xml
-index 2fed2194..0c5367be 100644
+index 2fed2194d373..0c5367be9c2c 100644
 --- a/packages/SystemUI/res/values/strings.xml
 +++ b/packages/SystemUI/res/values/strings.xml
 @@ -273,11 +273,15 @@
@@ -38,7 +38,7 @@ index 2fed2194..0c5367be 100644
      <string name="screenrecord_delete_error">Error deleting screen recording</string>
      <!-- A toast message shown when the screen recording cannot be started due to insufficient permissions [CHAR LIMIT=NONE] -->
 diff --git a/packages/SystemUI/src/com/android/systemui/screenrecord/RecordingService.java b/packages/SystemUI/src/com/android/systemui/screenrecord/RecordingService.java
-index 04776266..885e88a6 100644
+index 047762662aab..885e88a6a218 100644
 --- a/packages/SystemUI/src/com/android/systemui/screenrecord/RecordingService.java
 +++ b/packages/SystemUI/src/com/android/systemui/screenrecord/RecordingService.java
 @@ -22,6 +22,7 @@ import android.app.NotificationChannel;

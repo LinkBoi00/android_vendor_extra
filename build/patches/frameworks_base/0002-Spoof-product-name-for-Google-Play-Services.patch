@@ -1,48 +1,20 @@
-From 37f08f2eea95e8f28936d9862e394b1001cd5e6b Mon Sep 17 00:00:00 2001
+From 7d73dd50b0b59bf01b97513fb2fb1820ec9214c1 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 11 Oct 2021 19:59:51 -0700
-Subject: [PATCH 02/10] base: Spoof build properties
+Subject: [PATCH 02/15] Spoof product name for Google Play Services
 
-As of September 2, Google is enforcing SafetyNet's previously
-opportunistic hardware-backed attestation based on device information.
-Append a space to the device model name in order to avoid such
-enforcement.
+NB: This code is under the gmscompat package, but it does not depend on
+any code from gmscompat.
 
-Also contains:
-	Spoof build fingerprint for Google Play Services
-
-	SafetyNet's CTS profile attestation checks whether Build.FINGERPRINT
-	matches that of the device's stock OS, which has passed CTS testing.
-	Spoof the fingerprint for Google Play Services to help pass SafetyNet.
-
-	We used to set the real system build fingerprint to the stock one, but
-	Android relies on each build having a unique fingerprint in order to
-	clear the correct caches and update persistent state for system changes.
-	On devices that no longer receive updates from the OEM, the build
-	fingerprint never changes and Android doesn't account for updates
-	correctly, which causes issues when updating without wiping data.
-	Only spoofing the fingerprint for Google Play Services fixes this issue.
-
-	Corresponding vendor commit:
-	"Only use stock build fingerprint for Google Play Services"
-
-	NB: This code is under the gmscompat package, but it does not depend on
-	any code from gmscompat.
-
-	Change-Id: I26a2498eb2e2163933303b03f6d516e5fb30fe51
-
-* We don't need to spoof the fingerprint here since we do it globally, but we
-  use the Build field spoofing code it added for model
-
-Change-Id: Ib7779e0aae40cab3730a56785e9231896917ab0a
+Change-Id: Ic018c0d7abe4573143c3b92301a2625b91e6673a
 ---
  core/java/android/app/Instrumentation.java    |  4 ++
- .../internal/gmscompat/AttestationHooks.java  | 67 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
+ .../internal/gmscompat/AttestationHooks.java  | 60 +++++++++++++++++++
+ 2 files changed, 64 insertions(+)
  create mode 100644 core/java/com/android/internal/gmscompat/AttestationHooks.java
 
 diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
-index 556058b5..44449588 100644
+index 556058b567f9..44449588bbab 100644
 --- a/core/java/android/app/Instrumentation.java
 +++ b/core/java/android/app/Instrumentation.java
 @@ -57,6 +57,8 @@ import android.view.WindowManagerGlobal;
@@ -72,10 +44,10 @@ index 556058b5..44449588 100644
  
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 new file mode 100644
-index 00000000..c8d3b1c4
+index 000000000000..55db97dc28a1
 --- /dev/null
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,60 @@
 +/*
 + * Copyright (C) 2021 The Android Open Source Project
 + *
@@ -96,6 +68,7 @@ index 00000000..c8d3b1c4
 +
 +import android.app.Application;
 +import android.os.Build;
++import android.os.SystemProperties;
 +import android.util.Log;
 +
 +import java.lang.reflect.Field;
@@ -103,14 +76,12 @@ index 00000000..c8d3b1c4
 +/** @hide */
 +public final class AttestationHooks {
 +    private static final String TAG = "GmsCompat/Attestation";
++
 +    private static final String PACKAGE_GMS = "com.google.android.gms";
-+    private static final String PROCESS_UNSTABLE = "com.google.android.gms.unstable";
-+    private static final String SAMSUNG = "com.samsung.android.";
-+    private static final String FAKE_FINGERPRINT = "google/angler/angler:6.0/MDB08L/2343525:user/release-keys";
 +
 +    private AttestationHooks() { }
 +
-+    private static void setBuildField(String key, Object value) {
++    private static void setBuildField(String key, String value) {
 +        try {
 +            // Unlock
 +            Field field = Build.class.getDeclaredField(key);
@@ -126,20 +97,14 @@ index 00000000..c8d3b1c4
 +        }
 +    }
 +
++    private static void spoofBuildGms() {
++        // Alter model name to avoid hardware attestation enforcement
++        setBuildField("MODEL", "Pixel 5a");
++    }
++
 +    public static void initApplicationBeforeOnCreate(Application app) {
-+        String packageName = app.getPackageName();
-+        String processName = Application.getProcessName();
-+
-+        if (PACKAGE_GMS.equals(packageName)
-+                && PROCESS_UNSTABLE.equals(processName)) {
-+          setBuildField("MODEL", Build.MODEL + " ");
-+          setBuildField("FINGERPRINT", FAKE_FINGERPRINT);
-+        }
-+
-+        // Samsung apps like SmartThings, Galaxy Wearable crashes on samsung devices running AOSP
-+        if (packageName.startsWith(SAMSUNG)) {
-+          setBuildField("BRAND", "google");
-+          setBuildField("MANUFACTURER", "google");
++        if (PACKAGE_GMS.equals(app.getPackageName())) {
++            spoofBuildGms();
 +        }
 +    }
 +}
