@@ -8,10 +8,6 @@
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)
 
-# Apps
-PRODUCT_PACKAGES += \
-    GrapheneCamera
-
 # SafetyNet
 PRODUCT_PACKAGES += \
     ih8sn
