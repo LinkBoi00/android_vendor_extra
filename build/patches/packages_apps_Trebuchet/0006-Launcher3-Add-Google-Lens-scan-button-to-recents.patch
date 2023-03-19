@@ -1,7 +1,7 @@
-From 008504a06d7dbe24c62c6fb6e16e200e3a70015c Mon Sep 17 00:00:00 2001
+From c5e3df0eff041697db106b203e5c90ccb7028a5c Mon Sep 17 00:00:00 2001
 From: Suphon Thanakornpakapong <paphonb@gmail.com>
 Date: Mon, 18 Oct 2021 12:06:07 +0700
-Subject: [PATCH 5/6] Launcher3: Add Google Lens scan button to recents
+Subject: [PATCH 6/6] Launcher3: Add Google Lens scan button to recents
 
 And a squash of:
 
@@ -22,8 +22,8 @@ Signed-off-by: Adithya R <gh0strider.2k18.reborn@gmail.com>
  .../quickstep/util/ImageActionUtils.java      | 31 +++++++++++++++++++
  .../quickstep/views/OverviewActionsView.java  | 10 ++++++
  res/values/lineage_strings.xml                |  3 ++
- src/com/android/launcher3/Utilities.java      | 11 +++++++
- 9 files changed, 94 insertions(+)
+ src/com/android/launcher3/Utilities.java      | 12 +++++++
+ 9 files changed, 95 insertions(+)
  create mode 100644 quickstep/res/drawable/ic_lens.xml
 
 diff --git a/.gitignore b/.gitignore
@@ -100,10 +100,10 @@ index 227380664c..b7acd29795 100644
       * @param screenshot       to be saved to the media store.
       * @param screenshotBounds the location of where the bitmap was laid out on the screen in
 diff --git a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
-index 75f22741ac..fa248070b1 100644
+index e24966838e..0081e6e66b 100644
 --- a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
 +++ b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
-@@ -328,6 +328,14 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+@@ -323,6 +323,14 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
              public void onClearAllTasksRequested() {
                  endLiveTileMode(TaskOverlay.this::clearAllTasks);
              }
@@ -118,7 +118,7 @@ index 75f22741ac..fa248070b1 100644
          }
      }
  
-@@ -343,5 +351,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+@@ -338,5 +346,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
          void onSplit();
  
          void onClearAllTasksRequested();
@@ -183,7 +183,7 @@ index 9fe24dec66..37491dbd8b 100644
          THREAD_POOL_EXECUTOR.execute(() -> {
              File parent = new File(context.getCacheDir(), SUB_FOLDER);
 diff --git a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
-index 1c2e464644..76b27544a9 100644
+index c0a5da58fc..6471f9f555 100644
 --- a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
 +++ b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
 @@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
@@ -192,9 +192,9 @@ index 1c2e464644..76b27544a9 100644
  import com.android.launcher3.Insettable;
 +import com.android.launcher3.Utilities;
  import com.android.launcher3.R;
+ import com.android.launcher3.config.FeatureFlags;
  import com.android.launcher3.util.DisplayController;
- import com.android.launcher3.util.MultiValueAlpha;
-@@ -129,6 +130,13 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+@@ -136,6 +137,13 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
  
          mSplitButton = findViewById(R.id.action_split);
          mSplitButton.setOnClickListener(this);
@@ -208,7 +208,7 @@ index 1c2e464644..76b27544a9 100644
      }
  
      /**
-@@ -152,6 +160,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+@@ -159,6 +167,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
              mCallbacks.onSplit();
          } else if (id == R.id.action_clear_all) {
              mCallbacks.onClearAllTasksRequested();
@@ -218,10 +218,10 @@ index 1c2e464644..76b27544a9 100644
      }
  
 diff --git a/res/values/lineage_strings.xml b/res/values/lineage_strings.xml
-index be966955af..51cf2ecca1 100644
+index 081caad2b7..beb2b34cb3 100644
 --- a/res/values/lineage_strings.xml
 +++ b/res/values/lineage_strings.xml
-@@ -56,4 +56,7 @@
+@@ -60,4 +60,7 @@
      <!-- Gestures -->
      <string name="pref_dt_gesture_title">Double tap gesture</string>
      <string name="pref_dt_gesture_summary">Double tap on empty space for screen-off</string>
@@ -230,10 +230,18 @@ index be966955af..51cf2ecca1 100644
 +    <string name="action_lens">Lens</string>
  </resources>
 diff --git a/src/com/android/launcher3/Utilities.java b/src/com/android/launcher3/Utilities.java
-index adb73577eb..863d123cb5 100644
+index ed050d1ba2..abc9591a92 100644
 --- a/src/com/android/launcher3/Utilities.java
 +++ b/src/com/android/launcher3/Utilities.java
-@@ -154,6 +154,9 @@ public final class Utilities {
+@@ -30,6 +30,7 @@ import android.content.Context;
+ import android.content.SharedPreferences;
+ import android.content.pm.LauncherActivityInfo;
+ import android.content.pm.LauncherApps;
++import android.content.pm.PackageManager;
+ import android.content.pm.ShortcutInfo;
+ import android.content.res.Configuration;
+ import android.content.res.Resources;
+@@ -137,6 +138,9 @@ public final class Utilities {
      public static final boolean IS_DEBUG_DEVICE =
              Build.TYPE.toLowerCase(Locale.ROOT).equals("eng");
  
@@ -243,8 +251,8 @@ index adb73577eb..863d123cb5 100644
      /**
       * Returns true if theme is dark.
       */
-@@ -945,4 +948,12 @@ public final class Utilities {
-         SharedPreferences prefs = getPrefs(context.getApplicationContext());
+@@ -745,4 +749,12 @@ public final class Utilities {
+         SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
          return prefs.getBoolean(KEY_DT_GESTURE, true);
      }
 +

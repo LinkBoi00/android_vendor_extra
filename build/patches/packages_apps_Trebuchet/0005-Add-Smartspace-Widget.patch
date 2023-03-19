@@ -1,0 +1,149 @@
+From addf1926fb002c5abe79d9eb821e2ebbea0214be Mon Sep 17 00:00:00 2001
+From: Jyotiraditya <jyotiraditya@aospa.co>
+Date: Tue, 19 May 2020 16:55:28 +0200
+Subject: [PATCH 5/6] Add Smartspace Widget.
+
+Since we removed QSB on top it looks empty at the fist glance after boot.
+So, add "At a glance" widget provided by Google to the default workspace,
+this allows the user to move it around or remove it as per their choice.
+
+Change-Id: I4c2d7007595ceedca454e31ed751e75b06093c8d
+(cherry picked from commit 6d962cea2cd351142d92dc71e229bb76b78086a2)
+---
+ res/xml/default_workspace_4x5.xml | 10 ++++++++++
+ res/xml/default_workspace_5x5.xml | 10 ++++++++++
+ res/xml/default_workspace_5x6.xml | 10 ++++++++++
+ res/xml/default_workspace_5x7.xml | 10 ++++++++++
+ res/xml/default_workspace_6x5.xml | 10 ++++++++++
+ res/xml/default_workspace_6x6.xml | 10 ++++++++++
+ 6 files changed, 60 insertions(+)
+
+diff --git a/res/xml/default_workspace_4x5.xml b/res/xml/default_workspace_4x5.xml
+index 05c64acfd0..87285e7fc4 100644
+--- a/res/xml/default_workspace_4x5.xml
++++ b/res/xml/default_workspace_4x5.xml
+@@ -16,6 +16,16 @@
+ 
+ <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
+ 
++    <!-- Smartspace Widget -->
++    <appwidget
++        launcher:screen="0"
++        launcher:x="0"
++        launcher:y="0"
++        launcher:spanX="4"
++        launcher:spanY="1"
++        launcher:packageName="com.google.android.googlequicksearchbox"
++        launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
++
+     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+     <!-- Dialer, Messaging, Browser, Camera -->
+     <resolve
+diff --git a/res/xml/default_workspace_5x5.xml b/res/xml/default_workspace_5x5.xml
+index dba360132f..e2484b41d6 100644
+--- a/res/xml/default_workspace_5x5.xml
++++ b/res/xml/default_workspace_5x5.xml
+@@ -16,6 +16,16 @@
+ 
+ <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
+ 
++    <!-- Smartspace Widget -->
++    <appwidget
++        launcher:screen="0"
++        launcher:x="0"
++        launcher:y="0"
++        launcher:spanX="5"
++        launcher:spanY="1"
++        launcher:packageName="com.google.android.googlequicksearchbox"
++        launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
++
+     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+     <!-- Dialer, Messaging, Contacts, Browser, Camera -->
+     <resolve
+diff --git a/res/xml/default_workspace_5x6.xml b/res/xml/default_workspace_5x6.xml
+index 7e3257d541..ed0d8c2035 100644
+--- a/res/xml/default_workspace_5x6.xml
++++ b/res/xml/default_workspace_5x6.xml
+@@ -16,6 +16,16 @@
+ 
+ <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
+ 
++    <!-- Smartspace Widget -->
++    <appwidget
++        launcher:screen="0"
++        launcher:x="0"
++        launcher:y="0"
++        launcher:spanX="5"
++        launcher:spanY="1"
++        launcher:packageName="com.google.android.googlequicksearchbox"
++        launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
++
+     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+     <!-- Dialer, Messaging, [Maps/Music], Browser, Camera -->
+     <resolve
+diff --git a/res/xml/default_workspace_5x7.xml b/res/xml/default_workspace_5x7.xml
+index fe2362f635..2a0e2278ac 100644
+--- a/res/xml/default_workspace_5x7.xml
++++ b/res/xml/default_workspace_5x7.xml
+@@ -16,6 +16,16 @@
+ 
+ <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
+ 
++    <!-- Smartspace Widget -->
++    <appwidget
++        launcher:screen="0"
++        launcher:x="0"
++        launcher:y="0"
++        launcher:spanX="5"
++        launcher:spanY="1"
++        launcher:packageName="com.google.android.googlequicksearchbox"
++        launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
++
+     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+     <!-- Dialer, Messaging, [Maps/Music], Browser, Camera -->
+     <resolve
+diff --git a/res/xml/default_workspace_6x5.xml b/res/xml/default_workspace_6x5.xml
+index b078cfd7f8..ae8a08aee2 100644
+--- a/res/xml/default_workspace_6x5.xml
++++ b/res/xml/default_workspace_6x5.xml
+@@ -16,6 +16,16 @@
+ 
+ <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
+ 
++    <!-- Smartspace Widget -->
++    <appwidget
++        launcher:screen="0"
++        launcher:x="0"
++        launcher:y="0"
++        launcher:spanX="6"
++        launcher:spanY="1"
++        launcher:packageName="com.google.android.googlequicksearchbox"
++        launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
++
+     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+     <!-- Mail Calendar Gallery Store Internet Camera -->
+     <resolve
+diff --git a/res/xml/default_workspace_6x6.xml b/res/xml/default_workspace_6x6.xml
+index f6ab9292db..f51a788016 100644
+--- a/res/xml/default_workspace_6x6.xml
++++ b/res/xml/default_workspace_6x6.xml
+@@ -16,6 +16,16 @@
+ 
+ <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
+ 
++    <!-- Smartspace Widget -->
++    <appwidget
++        launcher:screen="0"
++        launcher:x="0"
++        launcher:y="0"
++        launcher:spanX="6"
++        launcher:spanY="1"
++        launcher:packageName="com.google.android.googlequicksearchbox"
++        launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
++
+     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+     <!-- Dialer, Messaging, [Maps/Music], Browser, Camera -->
+     <resolve
+-- 
+2.34.1
+
