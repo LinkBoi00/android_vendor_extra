@@ -20,11 +20,6 @@ export VENDOR_EXTRA_PATH=$(gettop)/vendor/extra
 export VENDOR_EXTERNAL_PATH="$VENDOR_EXTRA_PATH"/external
 export VENDOR_PATCHES_PATH="$VENDOR_EXTRA_PATH"/build/patches
 
-# Execute ih8sn fetch script
-echo -e "extra: Fetching ih8sn (SebaUbuntu)"
-VENDOR_EXTERNAL_IH8SN_PATH="$VENDOR_EXTERNAL_PATH/ih8sn"
-. $VENDOR_EXTERNAL_IH8SN_PATH/fetch-ih8sn.sh
-
 # Apply custom source patches
 echo -e "extra: Applying source-side patches"
 . "$VENDOR_PATCHES_PATH"/apply-patches.sh
