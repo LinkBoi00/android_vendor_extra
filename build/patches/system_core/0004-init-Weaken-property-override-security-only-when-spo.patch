@@ -1,0 +1,58 @@
+From 81afa4a602add6b9ef31891abf3bac5bd95f0ffc Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhenrique09.mcz@hotmail.com>
+Date: Fri, 20 Nov 2020 11:34:54 -0300
+Subject: [PATCH 4/9] init: Weaken property override security only when
+ spoofing safetynet
+
+Change-Id: I1664b3b3fa0fc87bda683d53a56645f6d974ce01
+---
+ init/property_service.cpp | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+index 63895b68e6..127ec92ea8 100644
+--- a/init/property_service.cpp
++++ b/init/property_service.cpp
+@@ -841,6 +841,9 @@ static const char *snet_prop_value[] = {
+ };
+ 
+ static void workaround_snet_properties() {
++    // Weaken property override security to set safetynet props
++    weaken_prop_override_security = true;
++
+ 	std::string error;
+ 	LOG(INFO) << "snet: Hiding sensitive props";
+ 
+@@ -848,6 +851,9 @@ static void workaround_snet_properties() {
+ 	for (int i = 0; snet_prop_key[i]; ++i) {
+ 		PropertySet(snet_prop_key[i], snet_prop_value[i], &error);
+ 	}
++
++    // Restore the normal property override security after safetynet props have been set
++    weaken_prop_override_security = false;
+ }
+ 
+ // If the ro.product.[brand|device|manufacturer|model|name] properties have not been explicitly
+@@ -1187,9 +1193,6 @@ void PropertyLoadBootDefaults() {
+         }
+     }
+ 
+-    // Weaken property override security during execution of the vendor init extension
+-    weaken_prop_override_security = true;
+-
+     // Update with vendor-specific property runtime overrides
+     vendor_load_properties();
+ 
+@@ -1204,9 +1207,6 @@ void PropertyLoadBootDefaults() {
+ 
+     // Workaround SafetyNet
+     workaround_snet_properties();
+-
+-    // Restore the normal property override security after init extension is executed
+-    weaken_prop_override_security = false;
+ }
+ 
+ bool LoadPropertyInfoFromFile(const std::string& filename,
+-- 
+2.34.1
+

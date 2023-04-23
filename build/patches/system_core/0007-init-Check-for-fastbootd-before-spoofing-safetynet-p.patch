@@ -1,0 +1,82 @@
+From d255abe66704ef739f0d9bbdc9e9f60f37d254e9 Mon Sep 17 00:00:00 2001
+From: Danny Lin <danny@kdrag0n.dev>
+Date: Wed, 7 Oct 2020 00:24:54 -0700
+Subject: [PATCH 7/9] init: Check for fastbootd before spoofing safetynet props
+
+The real prop values must be retained in recovery/fastbootd in
+order for fastbootd to allow/deny flashing correctly based on the
+bootloader lock state. This is accomplished by checking androidboot keys
+in the kernel cmdline and bootconfig (necessary on Pixel 6), and not
+spoofing anything if the boot isn't a normal full-blown Android boot.
+
+@jhenrique09 - Adapt to PE
+
+Change-Id: I8795b16a90eea4e5a03f64a7a56478f01144256b
+---
+ init/property_service.cpp | 38 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 32 insertions(+), 6 deletions(-)
+
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+index 820a3ca6ba..0a4a70e301 100644
+--- a/init/property_service.cpp
++++ b/init/property_service.cpp
+@@ -798,6 +798,8 @@ static void load_override_properties() {
+     }
+ }
+ 
++constexpr auto ANDROIDBOOT_MODE = "androidboot.mode"sv;
++
+ static const char *snet_prop_key[] = {
+     "ro.boot.vbmeta.device_state",
+     "ro.boot.verifiedbootstate",
+@@ -853,17 +855,41 @@ static const char *snet_prop_value[] = {
+ static void workaround_snet_properties() {
+     std::string build_type = android::base::GetProperty("ro.build.type", "");
+ 
++    // Check whether this is a normal boot, and whether the bootloader is actually locked
++    auto isNormalBoot = true; // no prop = normal boot
++    // This runs before keys are set as props, so we need to process them ourselves.
++    ImportKernelCmdline([&](const std::string& key, const std::string& value) {
++        if (key == ANDROIDBOOT_MODE && value != "normal") {
++            isNormalBoot = false;
++        }
++    });
++    ImportBootconfig([&](const std::string& key, const std::string& value) {
++        if (key == ANDROIDBOOT_MODE && value != "normal") {
++            isNormalBoot = false;
++        }
++    });
++
++    // Bail out if this is recovery, fastbootd, or anything other than a normal boot.
++    // fastbootd, in particular, needs the real values so it can allow flashing on
++    // unlocked bootloaders.
++    if (!isNormalBoot) {
++        return;
++    }
++
++    // Exit if eng build
++    if (build_type == "eng") {
++        return;
++    }
++
+     // Weaken property override security to set safetynet props
+     weaken_prop_override_security = true;
+ 
+     std::string error;
+ 
+-    // Hide all sensitive props if not eng build
+-    if (build_type != "eng") {
+-        LOG(INFO) << "snet: Hiding sensitive props";
+-        for (int i = 0; snet_prop_key[i]; ++i) {
+-            PropertySet(snet_prop_key[i], snet_prop_value[i], &error);
+-        }
++    // Hide all sensitive props 
++    LOG(INFO) << "snet: Hiding sensitive props";
++    for (int i = 0; snet_prop_key[i]; ++i) {
++        PropertySet(snet_prop_key[i], snet_prop_value[i], &error);
+     }
+ 
+     // Extra pops
+-- 
+2.34.1
+

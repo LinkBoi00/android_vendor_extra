@@ -1,0 +1,43 @@
+From bb54d6b18a0075fb7495f17e1aff9854b7a017ae Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhsv09@gmail.com>
+Date: Tue, 23 Aug 2022 17:11:54 -0300
+Subject: [PATCH 9/9] init: Spoof more props
+
+Change-Id: Ic0ddbd6a0dd40c877248f7864082eddab2b32366
+---
+ init/property_service.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+index fe05a1ef9c..06d32af313 100644
+--- a/init/property_service.cpp
++++ b/init/property_service.cpp
+@@ -810,10 +810,12 @@ static const char *snet_prop_key[] = {
+     "ro.warranty_bit",
+     "ro.debuggable",
+     "ro.secure",
++    "ro.bootimage.build.type",
+     "ro.build.type",
+     "ro.system.build.type",
+     "ro.system_ext.build.type",
+     "ro.vendor.build.type",
++    "ro.vendor_dlkm.build.type",
+     "ro.product.build.type",
+     "ro.odm.build.type",
+     "ro.build.keys",
+@@ -836,10 +838,12 @@ static const char *snet_prop_value[] = {
+     "0", // ro.warranty_bit
+     "0", // ro.debuggable
+     "1", // ro.secure
++    "user", // ro.bootimage.build.type
+     "user", // ro.build.type
+     "user", // ro.system.build.type
+     "user", // ro.system_ext.build.type
+     "user", // ro.vendor.build.type
++    "user", // ro.vendor_dlkm.build.type
+     "user", // ro.product.build.type
+     "user", // ro.odm.build.type
+     "release-keys", // ro.build.keys
+-- 
+2.34.1
+
