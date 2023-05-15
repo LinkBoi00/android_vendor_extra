@@ -1,7 +1,7 @@
-From 7d73dd50b0b59bf01b97513fb2fb1820ec9214c1 Mon Sep 17 00:00:00 2001
+From 736193c576b9ad3ca185cf4aee7e60486a7f5ff6 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 11 Oct 2021 19:59:51 -0700
-Subject: [PATCH 02/15] Spoof product name for Google Play Services
+Subject: [PATCH 02/11] Spoof product name for Google Play Services
 
 NB: This code is under the gmscompat package, but it does not depend on
 any code from gmscompat.
@@ -14,7 +14,7 @@ Change-Id: Ic018c0d7abe4573143c3b92301a2625b91e6673a
  create mode 100644 core/java/com/android/internal/gmscompat/AttestationHooks.java
 
 diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
-index 556058b567f9..44449588bbab 100644
+index 556058b567f99..44449588bbabb 100644
 --- a/core/java/android/app/Instrumentation.java
 +++ b/core/java/android/app/Instrumentation.java
 @@ -57,6 +57,8 @@ import android.view.WindowManagerGlobal;
@@ -44,7 +44,7 @@ index 556058b567f9..44449588bbab 100644
  
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 new file mode 100644
-index 000000000000..55db97dc28a1
+index 0000000000000..55db97dc28a1b
 --- /dev/null
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -0,0 +1,60 @@

@@ -1,7 +1,7 @@
-From bbd382e938d08a09acb1fad4019cea7fbd4e9313 Mon Sep 17 00:00:00 2001
+From 2c9734229f7015a9b2db6039b032ee6c8d7f0acd Mon Sep 17 00:00:00 2001
 From: Dyneteve <dyneteve@hentaios.com>
 Date: Thu, 8 Sep 2022 14:39:52 +0200
-Subject: [PATCH 06/15] gmscompat: Use Nexus 6P fingerprint for CTS/Integrity
+Subject: [PATCH 06/11] gmscompat: Use Nexus 6P fingerprint for CTS/Integrity
 
 Google seems to have patched the KM block to Play Store in record time,
 but is still not enforced for anything under android N.
@@ -18,7 +18,7 @@ Change-Id: Ic2401a6e40ddfc4318a1d0faa87e42eb118ac3d1
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 65469239a0c6..328d9777b2a2 100644
+index 65469239a0c6d..328d9777b2a28 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -54,8 +54,9 @@ public final class AttestationHooks {

@@ -1,7 +1,7 @@
-From f361d9e867d0b55e6434e14d03d63fb19b5075d6 Mon Sep 17 00:00:00 2001
+From 7230380ff7503277324b42072b4b31c79deae45a Mon Sep 17 00:00:00 2001
 From: Anirudh Gupta <anirudhgupta109@aosip.dev>
 Date: Wed, 4 Jan 2023 18:20:56 +0000
-Subject: [PATCH 08/15] gmscompat: Set shipping level to 32 for devices >=33
+Subject: [PATCH 08/11] gmscompat: Set shipping level to 32 for devices >=33
 
 If ro.product.first_api_level is 33, its forced to use HW attestation even though the safteynet checker app shows BASIC
 setting it to 32 allows for software attestation and passing CTS
@@ -13,7 +13,7 @@ Signed-off-by: Dyneteve <dyneteve@hentaios.com>
  1 file changed, 18 insertions(+)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 7649bb6533da..d2b1d2879c9c 100644
+index 7649bb6533daf..d2b1d2879c9c0 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -18,6 +18,7 @@ package com.android.internal.gmscompat;

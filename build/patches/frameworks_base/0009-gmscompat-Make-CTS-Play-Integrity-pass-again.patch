@@ -1,7 +1,7 @@
-From e4e35a72da67046637bdc8d1dbaec0587845d69e Mon Sep 17 00:00:00 2001
+From 5fd3f0e9044503662994202ec863ee7f693b82e8 Mon Sep 17 00:00:00 2001
 From: Dyneteve <dyneteve@hentaios.com>
 Date: Wed, 8 Feb 2023 15:21:01 +0000
-Subject: [PATCH 09/15] gmscompat: Make CTS/Play Integrity pass again
+Subject: [PATCH 09/11] gmscompat: Make CTS/Play Integrity pass again
 
 The logic behind CTS and Play Integrity has been updated today it now
 checks the product and model names against the fingerprint and if
@@ -19,7 +19,7 @@ Signed-off-by: Dyneteve <dyneteve@hentaios.com>
  1 file changed, 9 insertions(+), 11 deletions(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index d2b1d2879c9c..ef7a308a25bc 100644
+index d2b1d2879c9c0..ef7a308a25bc5 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -72,9 +72,11 @@ public final class AttestationHooks {

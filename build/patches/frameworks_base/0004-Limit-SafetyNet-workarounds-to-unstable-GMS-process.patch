@@ -1,7 +1,7 @@
-From 91f27f51af27ad18b2267096b23cb74f5cb77a8a Mon Sep 17 00:00:00 2001
+From c81fc754bc05d410a09d935f75597fe9db1eef7c Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 1 Nov 2021 20:06:48 -0700
-Subject: [PATCH 04/15] Limit SafetyNet workarounds to unstable GMS process
+Subject: [PATCH 04/11] Limit SafetyNet workarounds to unstable GMS process
 
 The unstable process is where SafetyNet attestation actually runs, so
 we only need to spoof the model in that process. Leaving other processes
@@ -15,7 +15,7 @@ Change-Id: Idcf663907a6c3d0408dbd45b1ac53c9eb4200df8
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index f2c85c82821f..37ce8c946de6 100644
+index f2c85c82821fd..37ce8c946de63 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -29,6 +29,8 @@ public final class AttestationHooks {

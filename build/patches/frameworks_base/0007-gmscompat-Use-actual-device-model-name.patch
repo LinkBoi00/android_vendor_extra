@@ -1,7 +1,7 @@
-From e260c0abdb3428cd9287b84bcc1f0ee84936fe43 Mon Sep 17 00:00:00 2001
+From dccadcf031db78c6ef040d76e914a0a1628b67de Mon Sep 17 00:00:00 2001
 From: Dyneteve <dyneteve@hentaios.com>
 Date: Tue, 6 Dec 2022 15:59:08 +0100
-Subject: [PATCH 07/15] gmscompat: Use actual device model name
+Subject: [PATCH 07/11] gmscompat: Use actual device model name
 
 Signed-off-by: Dyneteve <dyneteve@hentaios.com>
 Change-Id: I454654d87b3ea6286e12e9a9f5ed120f06cb2aa6
@@ -10,7 +10,7 @@ Change-Id: I454654d87b3ea6286e12e9a9f5ed120f06cb2aa6
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 328d9777b2a2..7649bb6533da 100644
+index 328d9777b2a28..7649bb6533daf 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -56,7 +56,7 @@ public final class AttestationHooks {

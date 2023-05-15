@@ -1,7 +1,7 @@
-From a4cb565583c1bcc294f002e15376b98c903a9f81 Mon Sep 17 00:00:00 2001
+From 0345f92e00f4822dea275c0fe59c02a4a0d91169 Mon Sep 17 00:00:00 2001
 From: Dyneteve <dyneteve@hentaios.com>
 Date: Tue, 23 Aug 2022 18:57:05 +0200
-Subject: [PATCH 05/15] gmscompat: Apply the SafetyNet workaround to Play Store
+Subject: [PATCH 05/11] gmscompat: Apply the SafetyNet workaround to Play Store
  aswell
 
 Play Store is used for the new Play Integrity API, extend the hack
@@ -16,7 +16,7 @@ Change-Id: Id607cdff0b902f285a6c1b769c0a4ee4202842b1
  1 file changed, 12 insertions(+)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 37ce8c946de6..65469239a0c6 100644
+index 37ce8c946de63..65469239a0c6d 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -29,9 +29,11 @@ public final class AttestationHooks {

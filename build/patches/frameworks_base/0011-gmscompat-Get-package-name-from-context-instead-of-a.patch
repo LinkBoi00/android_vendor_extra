@@ -1,0 +1,84 @@
+From aec659fe84297050e769fe98027b33ec0a0f7e7e Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhsv09@gmail.com>
+Date: Fri, 4 Nov 2022 15:40:04 -0300
+Subject: [PATCH 11/11] gmscompat: Get package name from context instead of app
+
+11-04 08:48:39.039 11637 11637 E AndroidRuntime: FATAL EXCEPTION: main
+11-04 08:48:39.039 11637 11637 E AndroidRuntime: Process: com.NextFloor.DestinyChild, PID: 11637
+11-04 08:48:39.039 11637 11637 E AndroidRuntime: java.lang.RuntimeException: Unable to get provider androidx.startup.InitializationProvider: androidx.startup.StartupException: android.content.pm.PackageManager$NameNotFoundException: ComponentInfo{/androidx.startup.InitializationProvider}
+11-04 08:48:39.039 11637 11637 E AndroidRuntime:   at android.app.ActivityThread.installProvider(ActivityThread.java:7488)
+
+Change-Id: Icb12f938fe0fca710f8f9d29182d0134ba3c63eb
+Signed-off-by: SJD Ayy <3xp1r4t3d@gmail.com>
+---
+ core/java/android/app/Instrumentation.java      |  4 ++--
+ .../internal/gmscompat/AttestationHooks.java    | 17 +++++++++++++----
+ 2 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
+index 44449588bbabb..176c3f4787bc7 100644
+--- a/core/java/android/app/Instrumentation.java
++++ b/core/java/android/app/Instrumentation.java
+@@ -1244,7 +1244,7 @@ public class Instrumentation {
+         Application app = getFactory(context.getPackageName())
+                 .instantiateApplication(cl, className);
+         app.attach(context);
+-        AttestationHooks.initApplicationBeforeOnCreate(app);
++        AttestationHooks.initApplicationBeforeOnCreate(context);
+         return app;
+     }
+     
+@@ -1262,7 +1262,7 @@ public class Instrumentation {
+             ClassNotFoundException {
+         Application app = (Application)clazz.newInstance();
+         app.attach(context);
+-        AttestationHooks.initApplicationBeforeOnCreate(app);
++        AttestationHooks.initApplicationBeforeOnCreate(context);
+         return app;
+     }
+ 
+diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+index ef7a308a25bc5..e0ce176ab1245 100644
+--- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
++++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+@@ -17,9 +17,11 @@
+ package com.android.internal.gmscompat;
+ 
+ import android.app.Application;
++import android.content.Context;
+ import android.os.Build;
+ import android.os.Build.VERSION;
+ import android.os.SystemProperties;
++import android.text.TextUtils;
+ import android.util.Log;
+ 
+ import java.lang.reflect.Field;
+@@ -79,14 +81,21 @@ public final class AttestationHooks {
+         setVersionField("DEVICE_INITIAL_SDK_INT", Build.VERSION_CODES.N_MR1);
+     }
+ 
+-    public static void initApplicationBeforeOnCreate(Application app) {
+-        if (PACKAGE_GMS.equals(app.getPackageName()) &&
+-                PROCESS_UNSTABLE.equals(Application.getProcessName())) {
++    public static void initApplicationBeforeOnCreate(Context context) {
++        final String packageName = context.getPackageName();
++        final String processName = Application.getProcessName();
++
++        if (TextUtils.isEmpty(packageName) || processName == null) {
++            return;
++        }
++
++        if (packageName.equals(PACKAGE_GMS) &&
++                processName.equals(PROCESS_UNSTABLE)) {
+             sIsGms = true;
+             spoofBuildGms();
+         }
+ 
+-        if (PACKAGE_FINSKY.equals(app.getPackageName())) {
++        if (packageName.equals(PACKAGE_FINSKY)) {
+             sIsFinsky = true;
+         }
+     }
+-- 
+2.34.1
+
