@@ -9,3 +9,4 @@ VENDOR_EXTRA_PATH := vendor/extra
 # Props
 TARGET_VENDOR_PROP += $(VENDOR_EXTRA_PATH)/props/vendor.prop
 TARGET_VENDOR_PROP += $(VENDOR_EXTRA_PATH)/props/go_vendor.prop
+TARGET_SYSTEM_EXT_PROP += $(VENDOR_EXTRA_PATH)/props/go_system_ext.prop
