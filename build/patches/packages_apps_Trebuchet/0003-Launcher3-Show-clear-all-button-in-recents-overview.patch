@@ -1,7 +1,7 @@
-From b359111fbcf7dbee15e6335340811fe35366ad9f Mon Sep 17 00:00:00 2001
+From b434d9cdb7b7a073c2ca082d65af989b237ab213 Mon Sep 17 00:00:00 2001
 From: jhonboy121 <alfredmathew05@gmail.com>
 Date: Tue, 15 Mar 2022 18:55:35 +0530
-Subject: [PATCH 3/6] Launcher3: Show clear all button in recents overview
+Subject: [PATCH 3/7] Launcher3: Show clear all button in recents overview
 
 idoybh (YAAP): Keep rightmost
 
@@ -80,10 +80,10 @@ index 0fda0bf8d4..319eb2349b 100644
 \ No newline at end of file
 +</com.android.quickstep.views.OverviewActionsView>
 diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/BackgroundAppState.java b/quickstep/src/com/android/launcher3/uioverrides/states/BackgroundAppState.java
-index 733c6a8b48..0e998f5a7f 100644
+index e5787209d2..87ddac2ccc 100644
 --- a/quickstep/src/com/android/launcher3/uioverrides/states/BackgroundAppState.java
 +++ b/quickstep/src/com/android/launcher3/uioverrides/states/BackgroundAppState.java
-@@ -75,7 +75,6 @@ public class BackgroundAppState extends OverviewState {
+@@ -74,7 +74,6 @@ public class BackgroundAppState extends OverviewState {
      public int getVisibleElements(Launcher launcher) {
          return super.getVisibleElements(launcher)
                  & ~OVERVIEW_ACTIONS
@@ -92,7 +92,7 @@ index 733c6a8b48..0e998f5a7f 100644
      }
  
 diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewModalTaskState.java b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewModalTaskState.java
-index 0c49e5fc69..771d88861b 100644
+index b9221eef9d..92a26d8685 100644
 --- a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewModalTaskState.java
 +++ b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewModalTaskState.java
 @@ -46,7 +46,7 @@ public class OverviewModalTaskState extends OverviewState {
@@ -105,10 +105,10 @@ index 0c49e5fc69..771d88861b 100644
  
      @Override
 diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
-index d075750330..6c1ef56feb 100644
+index 214679acbe..52532ebf6e 100644
 --- a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
 +++ b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
-@@ -100,7 +100,7 @@ public class OverviewState extends LauncherState {
+@@ -107,7 +107,7 @@ public class OverviewState extends LauncherState {
  
      @Override
      public int getVisibleElements(Launcher launcher) {
@@ -118,10 +118,10 @@ index d075750330..6c1ef56feb 100644
  
      @Override
 diff --git a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
-index d40f2ae017..e24966838e 100644
+index 6e47ff4716..8019bf00f9 100644
 --- a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
 +++ b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
-@@ -197,6 +197,11 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+@@ -202,6 +202,11 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
              overviewPanel.initiateSplitSelect(mThumbnailView.getTaskView());
          }
  
@@ -133,7 +133,7 @@ index d40f2ae017..e24966838e 100644
          /**
           * Called when the overlay is no longer used.
           */
-@@ -304,13 +309,20 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+@@ -309,13 +314,20 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
              }
  
              @SuppressLint("NewApi")
@@ -154,7 +154,7 @@ index d40f2ae017..e24966838e 100644
          }
      }
  
-@@ -324,5 +336,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+@@ -329,5 +341,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
  
          /** User wants to start split screen with current app. */
          void onSplit();
@@ -176,10 +176,10 @@ index 8b5f091e11..601021b5bf 100644
  
      /**
 diff --git a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
-index eeabdc83d1..c0a5da58fc 100644
+index e47c0893e5..f2c415a9c3 100644
 --- a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
 +++ b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
-@@ -132,6 +132,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+@@ -136,6 +136,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
          mMultiValueAlpha.setUpdateVisibility(true);
  
          findViewById(R.id.action_screenshot).setOnClickListener(this);
@@ -188,7 +188,7 @@ index eeabdc83d1..c0a5da58fc 100644
          mSplitButton = findViewById(R.id.action_split);
          mSplitButton.setOnClickListener(this);
      }
-@@ -150,11 +152,13 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+@@ -154,11 +156,13 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
          if (mCallbacks == null) {
              return;
          }
@@ -204,10 +204,10 @@ index eeabdc83d1..c0a5da58fc 100644
      }
  
 diff --git a/quickstep/src/com/android/quickstep/views/RecentsView.java b/quickstep/src/com/android/quickstep/views/RecentsView.java
-index 5e645ea917..c16aecbfeb 100644
+index 044272cb5d..6ec891e122 100644
 --- a/quickstep/src/com/android/quickstep/views/RecentsView.java
 +++ b/quickstep/src/com/android/quickstep/views/RecentsView.java
-@@ -3880,6 +3880,10 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
+@@ -3980,6 +3980,10 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
          mActivity.getStatsLogManager().logger().log(LAUNCHER_TASK_CLEAR_ALL);
      }
  

@@ -1,7 +1,7 @@
-From f2e3aeef2a518953839b026d46415519294531c1 Mon Sep 17 00:00:00 2001
+From 4db42c9a486ddc066d54c669fb73705191718215 Mon Sep 17 00:00:00 2001
 From: kubersharma001 <kubersharma001@gmail.com>
 Date: Sat, 24 Oct 2020 20:31:06 +0200
-Subject: [PATCH 4/6] Launcher3: power-off -> screen-off
+Subject: [PATCH 4/7] Launcher3: power-off -> screen-off
 
 Change-Id: I7ca7c2447ccac40a22adad34d717cdd177412b08
 ---

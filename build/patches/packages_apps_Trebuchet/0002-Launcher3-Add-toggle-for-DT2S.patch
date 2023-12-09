@@ -1,7 +1,7 @@
-From 623dd3dafde5caac3337c2ed668790d0785eeb4e Mon Sep 17 00:00:00 2001
+From 3210c7b1d286a609af42386bf9c7d7829cfadc37 Mon Sep 17 00:00:00 2001
 From: DennySPB <dennyspb@gmail.com>
 Date: Fri, 27 Sep 2019 15:21:57 +0300
-Subject: [PATCH 2/6] Launcher3: Add toggle for DT2S
+Subject: [PATCH 2/7] Launcher3: Add toggle for DT2S
 
 commit 39fa8b063cf682771c1800a2391689f96808218f
 Author: Omkar Chandorkar <gotenksIN@aosip.dev>
@@ -35,7 +35,7 @@ index dd03335495..2c245edbc9 100644
 +    <string name="pref_dt_gesture_summary">Double tap on empty space for power-off</string>
  </resources>
 diff --git a/res/xml/launcher_preferences.xml b/res/xml/launcher_preferences.xml
-index 01074b34fc..4e995d694a 100644
+index 83ef5b3bd2..36554e849c 100644
 --- a/res/xml/launcher_preferences.xml
 +++ b/res/xml/launcher_preferences.xml
 @@ -68,6 +68,13 @@
@@ -53,10 +53,10 @@ index 01074b34fc..4e995d694a 100644
          android:key="pref_suggestions"
          android:title="@string/pref_suggestions_title"
 diff --git a/src/com/android/launcher3/Utilities.java b/src/com/android/launcher3/Utilities.java
-index e56c5c0b6b..ed050d1ba2 100644
+index e5120113b5..f0e16a210e 100644
 --- a/src/com/android/launcher3/Utilities.java
 +++ b/src/com/android/launcher3/Utilities.java
-@@ -128,6 +128,8 @@ public final class Utilities {
+@@ -130,6 +130,8 @@ public final class Utilities {
       */
      public static final int EDGE_NAV_BAR = 1 << 8;
  
@@ -65,7 +65,7 @@ index e56c5c0b6b..ed050d1ba2 100644
      /**
       * Indicates if the device has a debug build. Should only be used to store additional info or
       * add extra logging and not for changing the app behavior.
-@@ -738,4 +740,9 @@ public final class Utilities {
+@@ -806,4 +808,9 @@ public final class Utilities {
          SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
          return !prefs.getBoolean(InvariantDeviceProfile.KEY_WORKSPACE_LOCK, false);
      }

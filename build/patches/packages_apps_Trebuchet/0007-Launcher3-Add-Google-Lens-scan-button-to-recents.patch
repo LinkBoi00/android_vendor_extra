@@ -1,7 +1,7 @@
-From c5e3df0eff041697db106b203e5c90ccb7028a5c Mon Sep 17 00:00:00 2001
+From 5bb563fa742e5d1e7fdfe9558de84346fc67cc61 Mon Sep 17 00:00:00 2001
 From: Suphon Thanakornpakapong <paphonb@gmail.com>
 Date: Mon, 18 Oct 2021 12:06:07 +0700
-Subject: [PATCH 6/6] Launcher3: Add Google Lens scan button to recents
+Subject: [PATCH 7/7] Launcher3: Add Google Lens scan button to recents
 
 And a squash of:
 
@@ -100,10 +100,10 @@ index 227380664c..b7acd29795 100644
       * @param screenshot       to be saved to the media store.
       * @param screenshotBounds the location of where the bitmap was laid out on the screen in
 diff --git a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
-index e24966838e..0081e6e66b 100644
+index 8019bf00f9..94ff0239fe 100644
 --- a/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
 +++ b/quickstep/src/com/android/quickstep/TaskOverlayFactory.java
-@@ -323,6 +323,14 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+@@ -328,6 +328,14 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
              public void onClearAllTasksRequested() {
                  endLiveTileMode(TaskOverlay.this::clearAllTasks);
              }
@@ -118,7 +118,7 @@ index e24966838e..0081e6e66b 100644
          }
      }
  
-@@ -338,5 +346,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
+@@ -343,5 +351,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
          void onSplit();
  
          void onClearAllTasksRequested();
@@ -127,18 +127,18 @@ index e24966838e..0081e6e66b 100644
      }
  }
 diff --git a/quickstep/src/com/android/quickstep/util/ImageActionUtils.java b/quickstep/src/com/android/quickstep/util/ImageActionUtils.java
-index 9fe24dec66..37491dbd8b 100644
+index 3a1c99b078..9f8a342517 100644
 --- a/quickstep/src/com/android/quickstep/util/ImageActionUtils.java
 +++ b/quickstep/src/com/android/quickstep/util/ImageActionUtils.java
-@@ -49,6 +49,7 @@ import androidx.core.content.FileProvider;
+@@ -51,6 +51,7 @@ import androidx.core.content.FileProvider;
  import com.android.internal.app.ChooserActivity;
- import com.android.internal.util.ScreenshotHelper;
+ import com.android.internal.util.ScreenshotRequest;
  import com.android.launcher3.BuildConfig;
 +import com.android.launcher3.Utilities;
  import com.android.quickstep.SystemUiProxy;
  import com.android.systemui.shared.recents.model.Task;
  
-@@ -151,6 +152,18 @@ public class ImageActionUtils {
+@@ -159,6 +160,18 @@ public class ImageActionUtils {
          });
      }
  
@@ -157,7 +157,7 @@ index 9fe24dec66..37491dbd8b 100644
      /**
       * Starts activity based on given intent created from image uri.
       */
-@@ -291,6 +304,24 @@ public class ImageActionUtils {
+@@ -299,6 +312,24 @@ public class ImageActionUtils {
          return new Intent[]{Intent.createChooser(intent, null).addFlags(FLAG_ACTIVITY_NEW_TASK)};
      }
  
@@ -183,7 +183,7 @@ index 9fe24dec66..37491dbd8b 100644
          THREAD_POOL_EXECUTOR.execute(() -> {
              File parent = new File(context.getCacheDir(), SUB_FOLDER);
 diff --git a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
-index c0a5da58fc..6471f9f555 100644
+index f2c415a9c3..994f9cea7f 100644
 --- a/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
 +++ b/quickstep/src/com/android/quickstep/views/OverviewActionsView.java
 @@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
@@ -194,7 +194,7 @@ index c0a5da58fc..6471f9f555 100644
  import com.android.launcher3.R;
  import com.android.launcher3.config.FeatureFlags;
  import com.android.launcher3.util.DisplayController;
-@@ -136,6 +137,13 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+@@ -140,6 +141,13 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
  
          mSplitButton = findViewById(R.id.action_split);
          mSplitButton.setOnClickListener(this);
@@ -208,7 +208,7 @@ index c0a5da58fc..6471f9f555 100644
      }
  
      /**
-@@ -159,6 +167,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
+@@ -163,6 +171,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
              mCallbacks.onSplit();
          } else if (id == R.id.action_clear_all) {
              mCallbacks.onClearAllTasksRequested();
@@ -230,7 +230,7 @@ index 081caad2b7..beb2b34cb3 100644
 +    <string name="action_lens">Lens</string>
  </resources>
 diff --git a/src/com/android/launcher3/Utilities.java b/src/com/android/launcher3/Utilities.java
-index ed050d1ba2..abc9591a92 100644
+index f0e16a210e..beffb26b0e 100644
 --- a/src/com/android/launcher3/Utilities.java
 +++ b/src/com/android/launcher3/Utilities.java
 @@ -30,6 +30,7 @@ import android.content.Context;
@@ -241,17 +241,17 @@ index ed050d1ba2..abc9591a92 100644
  import android.content.pm.ShortcutInfo;
  import android.content.res.Configuration;
  import android.content.res.Resources;
-@@ -137,6 +138,9 @@ public final class Utilities {
+@@ -141,6 +142,9 @@ public final class Utilities {
      public static final boolean IS_DEBUG_DEVICE =
              Build.TYPE.toLowerCase(Locale.ROOT).equals("eng");
  
 +    public static final String GSA_PACKAGE = "com.google.android.googlequicksearchbox";
 +    public static final String LENS_SHARE_ACTIVITY = "com.google.android.apps.search.lens.LensShareEntryPointActivity";
 +
-     /**
-      * Returns true if theme is dark.
-      */
-@@ -745,4 +749,12 @@ public final class Utilities {
+     public static final int TRANSLATE_UP = 0;
+     public static final int TRANSLATE_DOWN = 1;
+     public static final int TRANSLATE_LEFT = 2;
+@@ -813,4 +817,12 @@ public final class Utilities {
          SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
          return prefs.getBoolean(KEY_DT_GESTURE, true);
      }

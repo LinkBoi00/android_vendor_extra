@@ -1,0 +1,87 @@
+From e0b4f758617bb5f01a765c05c312fececa7f4078 Mon Sep 17 00:00:00 2001
+From: Ido Ben-Hur <idoybh2@gmail.com>
+Date: Tue, 21 Feb 2023 17:09:33 +0200
+Subject: [PATCH 6/7] Launcher3: Fix nonsense smartspace span in some
+ workspaces
+
+And also give it one extra span in Y for layouts that have 6 rows and above
+
+Change-Id: Iaa0e4c8a38143b8b0b69bb24879edf4968cd4ed8
+---
+ res/xml/default_workspace_2x2.xml | 2 +-
+ res/xml/default_workspace_5x6.xml | 2 +-
+ res/xml/default_workspace_5x7.xml | 2 +-
+ res/xml/default_workspace_6x5.xml | 2 +-
+ res/xml/default_workspace_6x6.xml | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/res/xml/default_workspace_2x2.xml b/res/xml/default_workspace_2x2.xml
+index c0bac5bef3..a4cf88100e 100644
+--- a/res/xml/default_workspace_2x2.xml
++++ b/res/xml/default_workspace_2x2.xml
+@@ -21,7 +21,7 @@
+         launcher:screen="0"
+         launcher:x="0"
+         launcher:y="0"
+-        launcher:spanX="4"
++        launcher:spanX="2"
+         launcher:spanY="1"
+         launcher:packageName="com.google.android.googlequicksearchbox"
+         launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
+diff --git a/res/xml/default_workspace_5x6.xml b/res/xml/default_workspace_5x6.xml
+index ed0d8c2035..b3ae961ad5 100644
+--- a/res/xml/default_workspace_5x6.xml
++++ b/res/xml/default_workspace_5x6.xml
+@@ -22,7 +22,7 @@
+         launcher:x="0"
+         launcher:y="0"
+         launcher:spanX="5"
+-        launcher:spanY="1"
++        launcher:spanY="2"
+         launcher:packageName="com.google.android.googlequicksearchbox"
+         launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
+ 
+diff --git a/res/xml/default_workspace_5x7.xml b/res/xml/default_workspace_5x7.xml
+index 2a0e2278ac..dfaabdbecf 100644
+--- a/res/xml/default_workspace_5x7.xml
++++ b/res/xml/default_workspace_5x7.xml
+@@ -22,7 +22,7 @@
+         launcher:x="0"
+         launcher:y="0"
+         launcher:spanX="5"
+-        launcher:spanY="1"
++        launcher:spanY="2"
+         launcher:packageName="com.google.android.googlequicksearchbox"
+         launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
+ 
+diff --git a/res/xml/default_workspace_6x5.xml b/res/xml/default_workspace_6x5.xml
+index 8601f48460..c61e3f9ce7 100644
+--- a/res/xml/default_workspace_6x5.xml
++++ b/res/xml/default_workspace_6x5.xml
+@@ -21,7 +21,7 @@
+         launcher:screen="0"
+         launcher:x="0"
+         launcher:y="0"
+-        launcher:spanX="2"
++        launcher:spanX="6"
+         launcher:spanY="1"
+         launcher:packageName="com.google.android.googlequicksearchbox"
+         launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
+diff --git a/res/xml/default_workspace_6x6.xml b/res/xml/default_workspace_6x6.xml
+index e9f4e751da..cb6ad67c23 100644
+--- a/res/xml/default_workspace_6x6.xml
++++ b/res/xml/default_workspace_6x6.xml
+@@ -21,8 +21,8 @@
+         launcher:screen="0"
+         launcher:x="0"
+         launcher:y="0"
+-        launcher:spanX="5"
+-        launcher:spanY="1"
++        launcher:spanX="6"
++        launcher:spanY="2"
+         launcher:packageName="com.google.android.googlequicksearchbox"
+         launcher:className="com.google.android.apps.gsa.staticplugins.smartspace.widget.SmartspaceWidgetProvider" />
+ 
+-- 
+2.34.1
+
