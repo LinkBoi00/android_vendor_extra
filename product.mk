@@ -17,4 +17,5 @@ DEVICE_PACKAGE_OVERLAYS += \
 
 PRODUCT_PACKAGES += \
     FrameworksResOverlay \
-    LineageUpdaterOverlay
+    LineageUpdaterOverlay \
+    SimpleDeviceConfigOverlay
