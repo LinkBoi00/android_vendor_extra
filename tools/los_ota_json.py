@@ -17,11 +17,10 @@ def getprop(prop):
     ).group(0)
 
 
-version, datetime, incremental, codename = (
+version, datetime, incremental = (
     getprop("ro.lineage.build.version"),  # version
     getprop("ro.build.date.utc"),  # datetime
     getprop("ro.build.version.incremental"),  # incremental
-    getprop("ro.lineage.device"),  # codename
 )
 filename = max(
     glob("".join(["lineage-", version, "*", ".zip"])),
@@ -31,8 +30,7 @@ id = md5(open(filename, "rb").read()).hexdigest()
 size = os.stat(filename).st_size
 url = "".join(
     [
-        "https://github.com/ItsVixano-releases/LineageOS_",
-        codename,
+        "https://github.com/xiaomi-mt6853-devs/releases",
         "/releases/download/",
         sub("[^0-9]", "", incremental)[:-6],
         "/",
@@ -56,7 +54,7 @@ print(
   ]
 }
 
-Place a dummy json file named "%s.json"
+Place a dummy json file named "updater-%s.json"
 """
     % (datetime, filename, id, size, url, version, incremental)
 )
